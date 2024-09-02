@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using RegistroTecnico.Components;
+using RegistroTecnico.DAL;
+using RegistroTecnico.Services;
 
 namespace RegistroTecnico
 {
@@ -11,6 +14,14 @@ namespace RegistroTecnico
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            //Obtenemos el ConStr para usarlo en el contexto
+            var ConStr = builder.Configuration.GetConnectionString("ConStr");
+            //Agregamos el contexto al builder con el ConStr
+            builder.Services.AddDbContext<Contexto>(Options => Options.UseSqlite(ConStr));
+
+            builder.Services.AddScoped<Tecnicoservice>(); 
+
+
 
             var app = builder.Build();
 
