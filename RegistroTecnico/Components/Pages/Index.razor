@@ -50,7 +50,7 @@
                     <InputSelect class="form-select" @bind-Value="Filtro">
                         <option value="" selected disabled>Elija una opci&oacute;n</option>
                         <option value="Id">Id</option>
-                        <option value="Nombre">Nombre</option>
+                        <option value="Nombres">Nombre</option>
                         <option value="SueldoHora">Sueldo/Hora</option>
                     </InputSelect>
                 </div>
@@ -62,9 +62,6 @@
                             <img src="/images/search-icon.png" alt="Buscar" style="width: 24px; height: 24px;" />
                         </button>
                     </div>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-outline-secondary bi bi-arrow-clockwise" @onclick="Restablecer"></button>
                 </div>
             </div>
             <div class="col-3">
@@ -86,24 +83,24 @@
                     @foreach (var tecnico in ListaTecnicos)
                     {
                         <tr>
-                            <td>@tecnico.tecniCold</td>
-                            <td>@tecnico.nombre</td>
-                            <td>@tecnico.sueldoHora</td>
+                            <td>@tecnico.TecnicoId</td>
+                            <td>@tecnico.Nombres</td>
+                            <td>@tecnico.SueldoHora</td>
 
                             <td>
-                                <button type="button" class="btn btn-outline-primary" @onclick="() => PantallaObservar(tecnico.tecniCold)">
+                                <button type="button" class="btn btn-outline-primary" @onclick="() => PantallaObservar(tecnico.TecnicoId)">
                                     <img src="/images/details-icon.png" alt="Detalles" />
                                 </button>
                             </td>
 
                             <td>
-                                <button type="button" class="btn btn-outline-warning" @onclick="() => PantallaEditar(tecnico.tecniCold)">
+                                <button type="button" class="btn btn-outline-warning" @onclick="() => PantallaEditar(tecnico.TecnicoId)">
                                     <img src="/images/edit-icon.png" alt="Editar" />
                                 </button>
                             </td>
 
                             <td>
-                                <button type="button" class="btn btn-outline-danger" @onclick="() => PantallaEliminar(tecnico.tecniCold)">
+                                <button type="button" class="btn btn-outline-danger" @onclick="() => PantallaEliminar(tecnico.TecnicoId)">
                                     <img src="/images/delete-icon.png" alt="Eliminar" />
                                 </button>
                             </td>
@@ -127,7 +124,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListaTecnicos = await tecnicoService.Listar(e => e.tecniCold > 0);
+        ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
     }
 
     public void PantallaCrear() => navigationManager.NavigateTo("/Tecnicos/Create");
@@ -152,24 +149,24 @@
         if (ValorFiltro.Trim() != "")
         {
             if (Filtro == "Id" && int.TryParse(ValorFiltro, out int tecniCold))
-                ListaTecnicos = await tecnicoService.Listar(e => e.tecniCold == tecniCold);
+                ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId == tecniCold);
             else if (Filtro == "Nombre")
-                ListaTecnicos = await tecnicoService.Listar(e => e.nombre.ToLower().Contains(ValorFiltro.ToLower()));
+                ListaTecnicos = await tecnicoService.Listar(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
             else if (Filtro == "SueldoHora")
             {
                 if (double.TryParse(ValorFiltro, out double sueldoHora))
                 {
-                    ListaTecnicos = await tecnicoService.Listar(e => e.sueldoHora == sueldoHora);
+                    ListaTecnicos = await tecnicoService.Listar(e => e.SueldoHora == sueldoHora);
                 }
             }
         }
         else
-            ListaTecnicos = await tecnicoService.Listar(e => e.tecniCold > 0);
+            ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
     }
 
     private async Task Restablecer()
     {
-        ListaTecnicos = await tecnicoService.Listar(e => e.tecniCold > 0);
+        ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
     }

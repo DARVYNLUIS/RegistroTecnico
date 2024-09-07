@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Models\Debug\net8.0\" />
     <Folder Include="Data\" />
+    <Folder Include="Migrations\" />
     <Folder Include="NewFolder\" />
   </ItemGroup>
 

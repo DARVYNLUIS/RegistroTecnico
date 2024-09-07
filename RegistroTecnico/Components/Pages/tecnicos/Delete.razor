@@ -1,5 +1,5 @@
 ﻿@page "/Tecnicos/Delete"
-@page "/Tecnicos/Delete/{tecniCold:int}"
+@page "/Tecnicos/Delete/{TecnicoId:int}"
 @inject Tecnicoservice TecnicoService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
@@ -19,9 +19,9 @@
                         <div class="card-body">
                             <p>¿Estás seguro que deseas eliminar al siguiente técnico?</p>
                             <ul class="list-unstyled">
-                                <li><strong>tecnicold:</strong> @tecnico.tecniCold</li>
-                                <li><strong>Nombre:</strong> @tecnico.nombre</li>
-                                <li><strong>Sueldo por hora:</strong> @tecnico.sueldoHora</li>
+                                <li><strong>tecnicold:</strong> @tecnico.TecnicoId</li>
+                                <li><strong>Nombre:</strong> @tecnico.Nombres</li>
+                                <li><strong>Sueldo por hora:</strong> @tecnico.SueldoHora</li>
                             </ul>
                         </div>
                     </div>
@@ -41,20 +41,20 @@ else
 
 @code {
     [Parameter]
-    public int tecniCold { get; set; }
+    public int TecnicoId { get; set; }
     public Tecnicos? tecnico { get; set; } = new Tecnicos();
 
     protected override async Task OnInitializedAsync()
     {
         // Buscar el técnico por ID
-        tecnico = await TecnicoService.Buscar(tecniCold);
+        tecnico = await TecnicoService.Buscar(TecnicoId);
     }
 
     private async Task EliminarTecnico()
     {
         if (tecnico != null)
         {
-            var eliminado = await TecnicoService.ELiminar(tecnico.tecniCold);
+            var eliminado = await TecnicoService.ELiminar(tecnico.TecnicoId);
             if (eliminado)
             {
                 // Redirigir a la lista de técnicos después de eliminar

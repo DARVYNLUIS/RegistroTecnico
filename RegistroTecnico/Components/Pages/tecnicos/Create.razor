@@ -15,7 +15,7 @@
                 <label for="tecniCold" class="form-label">ID del Tecnico:</label>
                 <div class="input-group">
                     <div style="width: 40%; height: 1em;">
-                        <InputNumber @bind-Value="tecnico.tecniCold" class="form-control" style="font-size: 0.8em;" aria-describedby="BotonBuscar" />
+                        <InputNumber @bind-Value="tecnico.TecnicoId" class="form-control" style="font-size: 0.8em;" aria-describedby="BotonBuscar" />
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                 <label for="tecniCold" class="form-label">Sueldo por hora <meta name="viewport" content="width=device-width" />:</label>
                 <div class="input-group">
                     <div style="width: 40%; height: 1em;">
-                        <InputNumber @bind-Value="tecnico.sueldoHora" class="form-control" style="font-size: 0.8em;" aria-describedby="BotonBuscar" />
+                        <InputNumber @bind-Value="tecnico.SueldoHora" class="form-control" style="font-size: 0.8em;" aria-describedby="BotonBuscar" />
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@
         @* Nombre *@
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre del tecnico:</label>
-            <InputText @bind-Value="tecnico.nombre" class="form-control" />
+            <InputText @bind-Value="tecnico.Nombres" class="form-control" />
         </div>
 
     </div>
@@ -65,7 +65,7 @@
     public async Task Buscar()
     {
         Existe = false;
-        var tecnicoEncontrado = await tecnicoService.Buscar(tecnico.tecniCold);
+        var tecnicoEncontrado = await tecnicoService.Buscar(tecnico.TecnicoId);
 
         if (tecnicoEncontrado != null)
         {
@@ -79,7 +79,7 @@
 
     public async Task<bool> Validar()
     {
-        Existe = await tecnicoService.Existe(tecnico.nombre);
+        Existe = await tecnicoService.Existe(tecnico.Nombres);
         return !Existe;
     }
 
@@ -99,7 +99,7 @@
 
     public async Task Eliminar()
     {
-        var eliminado = await tecnicoService.ELiminar(tecnico.tecniCold);
+        var eliminado = await tecnicoService.ELiminar(tecnico.TecnicoId);
         Nuevo();
     }
 
