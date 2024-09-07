@@ -12,24 +12,23 @@
                 background-color: #add8e6;
                 border: 2px solid black;
                 border-radius: 5px;
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
                 .titulo-fondo-azul-borde-negro img {
-                    margin-right: 10px; 
+                    margin-right: 10px;
                     width: 40px;
-                    height: 40px; 
+                    height: 40px;
                 }
 
             .btn img {
                 width: 24px;
-                height: 24px; 
+                height: 24px;
             }
         </style>
 
-       
         <div class="card-header text-center titulo-fondo-azul-borde-negro">
             <h3><strong>Listado de T&eacute;cnicos</strong></h3>
         </div>
@@ -52,6 +51,7 @@
                         <option value="Id">Id</option>
                         <option value="Nombres">Nombre</option>
                         <option value="SueldoHora">Sueldo/Hora</option>
+                        <option value="TipoTecnico">Tipo de T&eacute;cnico</option> 
                     </InputSelect>
                 </div>
 
@@ -68,11 +68,13 @@
                 <button type="button" class="btn btn-primary" @onclick="PantallaCrear"> Crear</button>
             </div>
 
+         
             <table class="table table-bordered text-center mt-4">
                 <thead>
                     <tr>
                         <th>ID de Tecnico</th>
                         <th>Nombres</th>
+                        <th>Tipo de T&eacute;cnico</th> 
                         <th>Sueldo/Hora</th>
                         <th>Detalles</th>
                         <th>Editar</th>
@@ -85,6 +87,7 @@
                         <tr>
                             <td>@tecnico.TecnicoId</td>
                             <td>@tecnico.Nombres</td>
+                            <td>@tecnico.TipoTecnico</td> 
                             <td>@tecnico.SueldoHora</td>
 
                             <td>
@@ -150,18 +153,19 @@
         {
             if (Filtro == "Id" && int.TryParse(ValorFiltro, out int tecniCold))
                 ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId == tecniCold);
-            else if (Filtro == "Nombre")
+            else if (Filtro == "Nombres")
                 ListaTecnicos = await tecnicoService.Listar(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
-            else if (Filtro == "SueldoHora")
+            else if (Filtro == "SueldoHora" && double.TryParse(ValorFiltro, out double sueldoHora))
             {
-                if (double.TryParse(ValorFiltro, out double sueldoHora))
-                {
-                    ListaTecnicos = await tecnicoService.Listar(e => e.SueldoHora == sueldoHora);
-                }
+                ListaTecnicos = await tecnicoService.Listar(e => e.SueldoHora == (decimal)sueldoHora);
             }
+            else if (Filtro == "TipoTecnico")
+                ListaTecnicos = await tecnicoService.Listar(e => e.TipoTecnico.ToLower().Contains(ValorFiltro.ToLower())); 
         }
         else
+        {
             ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
+        }
     }
 
     private async Task Restablecer()

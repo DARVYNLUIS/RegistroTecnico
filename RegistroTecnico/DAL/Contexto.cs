@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RegistroTecnico.Models;
 
 namespace RegistroTecnico.DAL

@@ -4,9 +4,14 @@ namespace RegistroTecnico.Models;
 
 public class Tecnicos
 {
-    [Key]
+    [Key]  
     public int TecnicoId { get; set; }
-    public string? Nombres {get; set; }
-    public double SueldoHora { get; set;}
-}  
+    
+    public string Nombres { get; set; }
+    
+    public decimal SueldoHora { get; set; }
+    
+    public string TipoTecnico { get; set; }
+}
+
 

@@ -23,10 +23,15 @@ namespace RegistroTecnico.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Nombres")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("SueldoHora")
-                        .HasColumnType("REAL");
+                    b.Property<decimal>("SueldoHora")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TipoTecnico")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("TecnicoId");
 
