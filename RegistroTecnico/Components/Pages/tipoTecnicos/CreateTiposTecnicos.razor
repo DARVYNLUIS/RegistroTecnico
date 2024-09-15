@@ -1,4 +1,4 @@
-﻿@page "/Tecnicos/Create"
+﻿@page "/TiposTecnicos/Create"
 @inject Tecnicoservice tecnicoService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
@@ -9,19 +9,30 @@
     </div>
 
     <div class="card-body">
-        
+
+        <div class="mb-3">
+            <label for="tipoTecnico" class="form-label">Seleccione el tipo de técnico:</label>
+            <InputSelect @bind-Value="tecnico.TipoTecnico" class="form-control">
+                <option value="">Elija una opcion</option>
+                <option value="Programador">Programador</option>
+                <option value="Impresora">Impresora</option>
+                <option value="Redes">Redes</option>
+            </InputSelect>
+        </div>
+
+
         <div class="mb-3">
             <label for="tecnicoId" class="form-label">ID del Técnico:</label>
             <InputNumber @bind-Value="tecnico.TecnicoId" class="form-control" />
         </div>
 
-     
+
         <div class="mb-3">
             <label for="sueldoHora" class="form-label">Sueldo por hora:</label>
             <InputNumber @bind-Value="tecnico.SueldoHora" class="form-control" />
         </div>
 
-        
+
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre del técnico:</label>
             <InputText @bind-Value="tecnico.Nombres" class="form-control" />

@@ -1,4 +1,4 @@
-﻿@page "/Tecnicos/Edit/{TecnicoId:int}"
+﻿@page "/TiposTecnicos/Edit/{TecnicoId:int}"
 @inject Tecnicoservice tecnicoservice
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
@@ -31,6 +31,10 @@
         <div class="mb-3">
             <label for="Nombre" class="form-label">Nombre:</label>
             <InputText @bind-Value="tecnicos.Nombres" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label for="TipoTecncico" class="form-label">Tipo de Tecnico:</label>
+            <InputText @bind-Value="tecnicos.TipoTecnico" class="form-control" />
         </div>
     </div>
 

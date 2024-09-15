@@ -1,42 +1,43 @@
-﻿@page "/TiposTecnicos/Delete"
-@page "/TiposTecnicos/Delete/{TecnicoId:int}"
+﻿@page "/TiposTecnicos/Details"
+@page "/TiposTecnicos/Details/{TecnicoId:int}"
 @inject Tecnicoservice TecnicoService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Eliminar Técnico</PageTitle>
+<PageTitle>Detalles de Tecnico</PageTitle>
 
 @if (tecnico != null)
 {
     <div class="container">
         <div class="card shadow-header">
-            <div class="card-header bg-danger text-white text-center py-2 rounded">
-                <h3 class="text-center"><strong>Eliminar Técnico</strong></h3>
+            <div class="card-header  bg-primary text-white text-center py-2 rounded">
+                <h3 class="text-center"><strong>Detalles del Tecnico</strong></h3>
             </div>
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
+
                         <div class="card-body">
-                            <p>¿Estás seguro que deseas eliminar al siguiente técnico?</p>
                             <ul class="list-unstyled">
                                 <li><strong>tecnicoId:</strong> @tecnico.TecnicoId</li>
                                 <li><strong>Nombre:</strong> @tecnico.Nombres</li>
                                 <li><strong>Sueldo por hora:</strong> @tecnico.SueldoHora</li>
+                                <li><strong>Tipo de Tecnico:</strong> @tecnico.TipoTecnico</li>
                             </ul>
                         </div>
+
                     </div>
                 </div>
             </div>
-            <div class="card-footer d-flex justify-content-between">
+            <div class="card-footer">
                 <button type="button" class="btn btn-outline-primary" @onclick="Volver"><i class="bi bi-box-arrow-left"></i> Volver</button>
-                <button type="button" class="btn btn-outline-danger" @onclick="EliminarTecnico"><i class="bi bi-trash"></i> Eliminar</button>
             </div>
         </div>
     </div>
 }
 else
 {
-    <p>Técnico no encontrado.</p>
+    <p>Tecnico no encontrado.</p>
 }
 
 @code {
@@ -46,29 +47,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // Buscar el técnico por ID
         tecnico = await TecnicoService.Buscar(TecnicoId);
-    }
-
-    private async Task EliminarTecnico()
-    {
-        if (tecnico != null)
-        {
-            var eliminado = await TecnicoService.ELiminar(tecnico.TecnicoId);
-            if (eliminado)
-            {
-                // Redirigir a la lista de técnicos después de eliminar
-                navigationManager.NavigateTo("/Tecnicos/Index");
-            }
-            else
-            {
-                Console.WriteLine("No se pudo eliminar el técnico.");
-            }
-        }
     }
 
     public void Volver()
     {
-        navigationManager.NavigateTo("/Tecnicos/Index");
+        navigationManager.NavigateTo("/TiposTecnicos/Index");
     }
 }

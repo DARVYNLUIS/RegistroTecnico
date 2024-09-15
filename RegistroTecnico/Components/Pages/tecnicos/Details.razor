@@ -1,5 +1,5 @@
 ﻿@page "/Tecnicos/Details"
-@page "/Tecnicos/Details/{tecniCold:int}"
+@page "/Tecnicos/Details/{TecnicoId:int}"
 @inject Tecnicoservice TecnicoService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
@@ -19,7 +19,7 @@
 
                         <div class="card-body">
                             <ul class="list-unstyled">
-                                <li><strong>tecnicold:</strong> @tecnico.TecnicoId</li>
+                                <li><strong>tecnicoId:</strong> @tecnico.TecnicoId</li>
                                 <li><strong>Nombre:</strong> @tecnico.Nombres</li>
                                 <li><strong>Sueldo por hora:</strong> @tecnico.SueldoHora</li>
                             </ul>
@@ -41,12 +41,12 @@ else
 
 @code {
     [Parameter]
-    public int tecniCold { get; set; }
+    public int TecnicoId { get; set; }
     public Tecnicos? tecnico { get; set; } = new Tecnicos();
 
     protected override async Task OnInitializedAsync()
     {
-        tecnico = await TecnicoService.Buscar(tecniCold);
+        tecnico = await TecnicoService.Buscar(TecnicoId);
     }
 
     public void Volver()

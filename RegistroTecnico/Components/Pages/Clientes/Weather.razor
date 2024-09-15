@@ -1,9 +1,8 @@
-﻿@page "/Tecnicos/Index"
-@inject Tecnicoservice tecnicoService
+﻿@page "/Clientes/Index"
+@inject ClientesService clienteService
 @inject NavigationManager navigationManager
-@rendermode InteractiveServer
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Clientes</PageTitle>
 
 <div class="container">
     <div class="shadow-lg">
@@ -30,7 +29,7 @@
         </style>
 
         <div class="card-header text-center titulo-fondo-azul-borde-negro">
-            <h3><strong>Listado de T&eacute;cnicos</strong></h3>
+            <h3><strong>Clientes</strong></h3>
         </div>
 
         <div class="card-body">
@@ -38,22 +37,20 @@
                 <div class="col-3">
                     <label class="col-form-label"><strong>Filtrar por</strong></label>
                 </div>
-
                 <div class="col-4">
-                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                    <label class="col-form-label"><strong>Búsqueda</strong></label>
                 </div>
             </div>
 
             <div class="row align-items-center">
                 <div class="col-3">
                     <InputSelect class="form-select" @bind-Value="Filtro">
-                        <option value="" selected disabled>Elija una opci&oacute;n</option>
+                        <option value="" selected disabled>Elija una opción</option>
                         <option value="Id">Id</option>
                         <option value="Nombres">Nombre</option>
-                        <option value="SueldoHora">Sueldo/Hora</option>
+                        <option value="WhatsApp">WhatsApp</option>
                     </InputSelect>
                 </div>
-
                 <div class="col-4">
                     <div class="input-group">
                         <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
@@ -67,40 +64,36 @@
                 <button type="button" class="btn btn-primary" @onclick="PantallaCrear"> Crear</button>
             </div>
 
-         
             <table class="table table-bordered text-center mt-4">
                 <thead>
                     <tr>
-                        <th>ID de Tecnico</th>
+                        <th>ID de Cliente</th>
                         <th>Nombres</th>
-                        <th>Sueldo/Hora</th>
+                        <th>WhatsApp</th>
                         <th>Detalles</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var tecnico in ListaTecnicos)
+                    @foreach (var cliente in ListaClientes)
                     {
                         <tr>
-                            <td>@tecnico.TecnicoId</td>
-                            <td>@tecnico.Nombres</td> 
-                            <td>@tecnico.SueldoHora</td>
-
+                            <td>@cliente.ClienteId</td>
+                            <td>@cliente.Nombres</td>
+                            <td>@cliente.WhatsApp</td>
                             <td>
-                                <button type="button" class="btn btn-outline-primary" @onclick="() => PantallaObservar(tecnico.TecnicoId)">
+                                <button type="button" class="btn btn-outline-primary" @onclick="() => PantallaObservar(cliente.ClienteId)">
                                     <img src="/images/details-icon.png" alt="Detalles" />
                                 </button>
                             </td>
-
                             <td>
-                                <button type="button" class="btn btn-outline-warning" @onclick="() => PantallaEditar(tecnico.TecnicoId)">
+                                <button type="button" class="btn btn-outline-warning" @onclick="() => PantallaEditar(cliente.ClienteId)">
                                     <img src="/images/edit-icon.png" alt="Editar" />
                                 </button>
                             </td>
-
                             <td>
-                                <button type="button" class="btn btn-outline-danger" @onclick="() => PantallaEliminar(tecnico.TecnicoId)">
+                                <button type="button" class="btn btn-outline-danger" @onclick="() => PantallaEliminar(cliente.ClienteId)">
                                     <img src="/images/delete-icon.png" alt="Eliminar" />
                                 </button>
                             </td>
@@ -111,62 +104,65 @@
         </div>
 
         <div class="card-footer">
-            <p><strong>Total de T&eacute;cnicos: </strong>@ListaTecnicos.Count</p>
+            <p><strong>Total de Clientes: </strong>@ListaClientes.Count</p>
         </div>
     </div>
 </div>
 
 @code {
-    public List<Tecnicos> ListaTecnicos { get; set; } = new List<Tecnicos>();
+    public List<Clientes> ListaClientes { get; set; } = new List<Clientes>();
 
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
+        ListaClientes = await clienteService.Listar(e => e.ClienteId > 0);
     }
 
-    public void PantallaCrear() => navigationManager.NavigateTo("/Tecnicos/Create");
+    public void PantallaCrear() => navigationManager.NavigateTo("/Clientes/Create");
 
     public void PantallaObservar(int id)
     {
-        navigationManager.NavigateTo($"/Tecnicos/Details/{id}");
+        navigationManager.NavigateTo($"/Clientes/Details/{id}");
     }
 
     public void PantallaEditar(int id)
     {
-        navigationManager.NavigateTo($"/Tecnicos/Edit/{id}");
+        navigationManager.NavigateTo($"/Clientes/Edit/{id}");
     }
 
     public void PantallaEliminar(int id)
     {
-        navigationManager.NavigateTo($"/Tecnicos/Delete/{id}");
+        navigationManager.NavigateTo($"/Clientes/Delete/{id}");
     }
 
     private async Task Buscar()
     {
-        if (ValorFiltro.Trim() != "")
+        if (!string.IsNullOrWhiteSpace(ValorFiltro))
         {
-            if (Filtro == "Id" && int.TryParse(ValorFiltro, out int tecniCold))
-                ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId == tecniCold);
-            else if (Filtro == "Nombres")
-                ListaTecnicos = await tecnicoService.Listar(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
-            else if (Filtro == "SueldoHora" && double.TryParse(ValorFiltro, out double sueldoHora))
+            if (Filtro == "Id" && int.TryParse(ValorFiltro, out int ClienteId))
             {
-                ListaTecnicos = await tecnicoService.Listar(e => e.SueldoHora == (decimal)sueldoHora);
+                ListaClientes = await clienteService.Listar(e => e.ClienteId == ClienteId);
             }
-           ; 
+            else if (Filtro == "Nombres")
+            {
+                ListaClientes = await clienteService.Listar(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
+            }
+            else if (Filtro == "Id" && int.TryParse(ValorFiltro, out int WhatsApp))
+            {
+                ListaClientes = await clienteService.Listar(e => e.ClienteId == WhatsApp);
+            }
         }
         else
         {
-            ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
+            ListaClientes = await clienteService.Listar(e => e.ClienteId > 0);
         }
     }
 
     private async Task Restablecer()
     {
-        ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
+        ListaClientes = await clienteService.Listar(e => e.ClienteId > 0);
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
     }

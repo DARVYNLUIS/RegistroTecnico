@@ -19,11 +19,14 @@ public class Program
         //Agregamos el contexto al builder con el ConStr
         builder.Services.AddDbContext<Contexto>(Options => Options.UseSqlite(ConStr));
 
-        builder.Services.AddScoped<Tecnicoservice>(); 
+        builder.Services.AddScoped<Tecnicoservice>();
+        builder.Services.AddScoped<ClientesService>();
+		builder.Services.AddScoped<TrabajosService>();
 
 
 
-        var app = builder.Build();
+
+		var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

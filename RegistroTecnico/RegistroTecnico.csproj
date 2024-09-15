@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Components\Pages\Trabajos\TrabajoIndex.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Models\Debug\net8.0\" />
     <Folder Include="Data\" />
     <Folder Include="Migrations\" />
@@ -21,6 +25,18 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Pages\Trabajos\TrabajoIndex.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Components\Pages\Trabajos\TrabajoIndex.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Trabajos\TrabajoIndex.razor" />
   </ItemGroup>
 
 </Project>

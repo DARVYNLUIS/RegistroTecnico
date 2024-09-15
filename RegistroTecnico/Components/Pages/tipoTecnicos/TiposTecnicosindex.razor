@@ -1,4 +1,4 @@
-﻿@page "/Tecnicos/Index"
+﻿@page "/TiposTecnicos/Index"
 @inject Tecnicoservice tecnicoService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
@@ -30,7 +30,7 @@
         </style>
 
         <div class="card-header text-center titulo-fondo-azul-borde-negro">
-            <h3><strong>Listado de T&eacute;cnicos</strong></h3>
+            <h3><strong>Tipos de T&eacute;cnicos</strong></h3>
         </div>
 
         <div class="card-body">
@@ -51,6 +51,7 @@
                         <option value="Id">Id</option>
                         <option value="Nombres">Nombre</option>
                         <option value="SueldoHora">Sueldo/Hora</option>
+                        <option value="TipoTecnico">Tipo de T&eacute;cnico</option>
                     </InputSelect>
                 </div>
 
@@ -67,12 +68,13 @@
                 <button type="button" class="btn btn-primary" @onclick="PantallaCrear"> Crear</button>
             </div>
 
-         
+
             <table class="table table-bordered text-center mt-4">
                 <thead>
                     <tr>
                         <th>ID de Tecnico</th>
                         <th>Nombres</th>
+                        <th>Tipo de T&eacute;cnico</th>
                         <th>Sueldo/Hora</th>
                         <th>Detalles</th>
                         <th>Editar</th>
@@ -84,7 +86,8 @@
                     {
                         <tr>
                             <td>@tecnico.TecnicoId</td>
-                            <td>@tecnico.Nombres</td> 
+                            <td>@tecnico.Nombres</td>
+                            <td>@tecnico.TipoTecnico</td>
                             <td>@tecnico.SueldoHora</td>
 
                             <td>
@@ -127,21 +130,21 @@
         ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
     }
 
-    public void PantallaCrear() => navigationManager.NavigateTo("/Tecnicos/Create");
+    public void PantallaCrear() => navigationManager.NavigateTo("/TiposTecnicos/Create");
 
     public void PantallaObservar(int id)
     {
-        navigationManager.NavigateTo($"/Tecnicos/Details/{id}");
+        navigationManager.NavigateTo($"/TiposTecnicos/Details/{id}");
     }
 
     public void PantallaEditar(int id)
     {
-        navigationManager.NavigateTo($"/Tecnicos/Edit/{id}");
+        navigationManager.NavigateTo($"/TiposTecnicos/Edit/{id}");
     }
 
     public void PantallaEliminar(int id)
     {
-        navigationManager.NavigateTo($"/Tecnicos/Delete/{id}");
+        navigationManager.NavigateTo($"/TiposTecnicos/Delete/{id}");
     }
 
     private async Task Buscar()
@@ -156,7 +159,8 @@
             {
                 ListaTecnicos = await tecnicoService.Listar(e => e.SueldoHora == (decimal)sueldoHora);
             }
-           ; 
+            else if (Filtro == "TipoTecnico")
+                ListaTecnicos = await tecnicoService.Listar(e => e.TipoTecnico.ToLower().Contains(ValorFiltro.ToLower()));
         }
         else
         {
