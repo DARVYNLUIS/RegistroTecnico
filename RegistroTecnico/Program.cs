@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RegistroTecnico.Components;
 using RegistroTecnico.DAL;
+using RegistroTecnico.Services;
 
 
 namespace RegistroTecnico
@@ -17,10 +18,14 @@ namespace RegistroTecnico
 
             //Obtenemos el ConStr para usarlo en el contexto
             var ConStr = builder.Configuration.GetConnectionString("SqlConStr");
+          
 
             //Agregamos el contexto al builder con el ConStr
             builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlServer(ConStr));
 
+
+            //Inyeccion del service
+            builder.Services.AddScoped<TecnicoService>();
 
             var app = builder.Build();
 
