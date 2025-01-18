@@ -53,7 +53,6 @@
                         <th>ID de Tecnico</th>
                         <th>Nombres</th>
                         <th>Sueldo/Hora</th>
-                        <th>Detalles</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -67,22 +66,14 @@
                             <td>@($"{tecnico.SueldoHora:N2}")</td>
 
                             <td>
-                                <button type="button" class="btn btn-outline-primary" @onclick="() => PantallaObservar(tecnico.TecnicoId)">
-                                    Detalles
+                                <button type="button" class="btn btn-warning bi bi-pencil-square" @onclick="() => PantallaEditar(tecnico.TecnicoId)">
 
                                 </button>
                             </td>
 
                             <td>
-                                <button type="button" class="btn btn-outline-warning" @onclick="() => PantallaEditar(tecnico.TecnicoId)">
-                                    Modiificar
+                                <button type="button" class="btn btn-danger bi bi-trash" @onclick="() => PantallaEliminar(tecnico.TecnicoId)">
 
-                                </button>
-                            </td>
-
-                            <td>
-                                <button type="button" class="btn btn-outline-danger" @onclick="() => PantallaEliminar(tecnico.TecnicoId)">
-                                    Eliminar
 
                                 </button>
                             </td>
