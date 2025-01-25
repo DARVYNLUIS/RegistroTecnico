@@ -12,6 +12,11 @@ public class TecnicoService(IDbContextFactory<Contexto> DbFactory)
         await using var contexto = await DbFactory.CreateDbContextAsync();
         return await contexto.Tecnicos.AnyAsync(t => t.TecnicoId == id);
     }
+    public async Task<bool> ExistePorNombre(string nombre)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.Tecnicos.AnyAsync(t => t.Nombres == nombre);
+    }
 
     private async Task<bool> Insertar(Tecnicos tecnico)
     {
