@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using RegistroTecnico.Components;
 using RegistroTecnico.DAL;
@@ -26,6 +27,9 @@ namespace RegistroTecnico
 
             //Inyeccion del service
             builder.Services.AddScoped<TecnicoService>();
+
+            builder.Services.AddScoped<ClienteServices>();
+
 
             var app = builder.Build();
 
