@@ -11,6 +11,7 @@ namespace RegistroTecnico
     {
         public static void Main(string[] args)
         {
+            
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -27,7 +28,7 @@ namespace RegistroTecnico
 
             //Inyeccion del service
             builder.Services.AddScoped<TecnicoService>();
-            builder.Services.AddScoped<ClienteServices>();
+            builder.Services.AddScoped<ClienteService>();
 
 
 
