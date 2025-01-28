@@ -1,91 +1,79 @@
 ﻿@page "/Ciudad/Index"
-@using RegistroTecnico.Services
-@using RegistroTecnico.Models
 @inject CiudadService ciudadService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Listado de Ciudades</PageTitle>
+<EditForm Model="ListaCiudades" class="border shadow-lg p-3 rounded">
 
-<div class="shadow-lg">
-    <div class="card shadow-lg border-0 rounded" style="background-color: #f8f9fa;">
-        <div class="card-header bg-primary text-white text-center">
-            <h3><strong>Listado de Ciudades</strong></h3>
-        </div>
-
-        <div class="card-body">
-            <div class="row">
-                <div class="col-3">
-                    <label class="col-form-label"><strong>Filtrar por</strong></label>
-                </div>
-
-                <div class="col-4">
-                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
-                </div>
+    <div class="card-header bg-primary text-white text-center py-2 rounded">
+        <h3 style="font-weight: bold;" class="mb-0">Listado de Ciudades</h3>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3 align-items-end">
+            <div class="col-md-3">
+                <label for="Filtro" class="form-label">Filtrar por:</label>
+                <select @bind="Filtro" class="form-select">
+                    <option value="" selected disabled>Elija una opción</option>
+                    <option value="CiudadId">CiudadID</option>
+                    <option value="Nombre">Nombre</option>
+                </select>
             </div>
-
-            <div class="row align-items-center mb-3">
-                <div class="col-3">
-                    <InputSelect class="form-select" @bind-Value="Filtro">
-                        <option value="" selected disabled>Elija una opci&oacute;n</option>
-                        <option value="CiudadId">CiudadID</option>
-                        <option value="Nombre">Nombre</option>
-                    </InputSelect>
-                </div>
-
-                <div class="col-4">
-                    <div class="input-group">
-                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
-                        <button type="button" class="btn btn-outline-primary" @onclick="Buscar">Buscar</button>
-                    </div>
-                </div>
-
-                <div class="col-3">
-                    <button type="button" class="btn btn-primary" @onclick="PantallaCrear">
-                        <span class=></span> Crear
+            <div class="col-md-6">
+                <label for="ValorFiltro" class="form-label">Búsqueda:</label>
+                <div class="input-group">
+                    <input @bind="ValorFiltro" class="form-control" placeholder="Buscar" />
+                    <button @onclick="Buscar" class="btn btn-outline-primary" type="button">
+                        <span class="bi bi-search"></span> Buscar
                     </button>
                 </div>
             </div>
+            <div class="col-md-3 text-end">
+                <button @onclick="PantallaCrear" class="btn btn-success" type="button">
+                    <span class="bi bi-plus-circle"></span> Crear
+                </button>
+            </div>
+        </div>
 
-            <table class="table table-bordered text-center mt-4">
-                <thead>
+        <table class="table table-bordered text-center">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>ID de Ciudad</th>
+                    <th>Nombre</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ciudad in ListaCiudades)
+                {
                     <tr>
-                        <th>CiudadID</th>
-                        <th>Nombre</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
+                        <td>@ciudad.CiudadId</td>
+                        <td>@ciudad.Nombre</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-success" @onclick="() => PantallaEditar(ciudad.CiudadId)">
+                                <span class="bi bi-pencil-square"></span>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-danger" @onclick="() => PantallaEliminar(ciudad.CiudadId)">
+                                <span class="bi bi-trash"></span>
+                            </button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var ciudad in ListaCiudades)
-                    {
-                        <tr>
-                            <td>@ciudad.CiudadId</td>
-                            <td>@ciudad.Nombre</td>
-                            <td>
-                                <button type="button" class="btn btn-warning bi bi-pencil-square"
-                                        @onclick="() => PantallaEditar(ciudad.CiudadId)">
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger bi bi-trash"
-                                        @onclick="() => PantallaEliminar(ciudad.CiudadId)">
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <div class="card-footer">
-            <p><strong>Total de Ciudades: </strong>@ListaCiudades.Count</p>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
-</div>
+
+    <div class="card-footer text-end">
+        <p><strong>Total de Ciudades: </strong>@ListaCiudades.Count</p>
+    </div>
+
+</EditForm>
 
 @code {
     public List<Ciudad> ListaCiudades { get; set; } = new List<Ciudad>();
+
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
@@ -108,20 +96,23 @@
 
     private async Task Buscar()
     {
-        if (!string.IsNullOrWhiteSpace(ValorFiltro))
+        if (ValorFiltro.Trim() != "")
         {
             if (Filtro == "CiudadId" && int.TryParse(ValorFiltro, out int ciudadId))
-            {
                 ListaCiudades = await ciudadService.Listar(c => c.CiudadId == ciudadId);
-            }
             else if (Filtro == "Nombre")
-            {
                 ListaCiudades = await ciudadService.Listar(c => c.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
-            }
         }
         else
         {
             ListaCiudades = await ciudadService.Listar(c => c.CiudadId > 0);
         }
+    }
+
+    private async Task Restablecer()
+    {
+        ListaCiudades = await ciudadService.Listar(c => c.CiudadId > 0);
+        Filtro = string.Empty;
+        ValorFiltro = string.Empty;
     }
 }
