@@ -1,0 +1,71 @@
+﻿@page "/Ciudad/Delete"
+@page "/Ciudad/Delete/{CiudadId:int}"
+@inject CiudadService ciudadService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Eliminar Ciudad</PageTitle>
+
+@if (ciudad != null)
+{
+    <div class="container">
+        <div class="card shadow-header">
+            <div class="card-header bg-danger text-white text-center py-2 rounded">
+                <h3 class="text-center"><strong>Eliminar Ciudad</strong></h3>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <p>¿Estás seguro que deseas eliminar la siguiente ciudad?</p>
+                            <ul class="list-unstyled">
+                                <li><strong>Ciudad ID:</strong> @ciudad.CiudadId</li>
+                                <li><strong>Nombre:</strong> @ciudad.Nombre</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-primary" @onclick="Volver"><i class="bi bi-box-arrow-left"></i> Volver</button>
+                <button type="button" class="btn btn-outline-danger" @onclick="EliminarCiudad"><i class="bi bi-trash"></i> Eliminar</button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Ciudad no encontrada.</p>
+}
+
+@code {
+    [Parameter]
+    public int CiudadId { get; set; }
+    public Ciudad? ciudad { get; set; } = new Ciudad();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ciudad = await ciudadService.Buscar(CiudadId);
+    }
+
+    private async Task EliminarCiudad()
+    {
+        if (ciudad != null)
+        {
+            var eliminado = await ciudadService.Eliminar(ciudad.CiudadId);
+            if (eliminado)
+            {
+                navigationManager.NavigateTo("/Ciudad/Index");
+            }
+            else
+            {
+                Console.WriteLine("No se pudo eliminar la ciudad.");
+            }
+        }
+    }
+
+    public void Volver()
+    {
+        navigationManager.NavigateTo("/Ciudad/Index");
+    }
+}

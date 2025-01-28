@@ -1,0 +1,86 @@
+﻿@page "/Ciudad/Edit/{CiudadId:int}"
+@inject CiudadService ciudadService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<div class="card shadow-lg border-0 rounded" style="background-color: #f8f9fa;">
+    <div class="card-header bg-primary text-white" style="text-align: center;">
+        <h3> <i class="fas fa-city"></i> Editar Ciudad</h3>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="CiudadId" class="form-label">ID Ciudad:</label>
+                <div class="input-group">
+                    <div style="width: 40%; height: 1em;">
+                        <InputNumber @bind-Value="ciudad.CiudadId" class="form-control" style="font-size: 0.8em;" aria-describedby="BotonBuscar" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="Nombre" class="form-label">Nombre:</label>
+            <InputText @bind-Value="ciudad.Nombre" class="form-control" />
+        </div>
+    </div>
+
+    <div class="card-footer bg-light d-flex justify-content-center mt-3">
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>
+            <button type="button" class="btn btn-outline-success ml-2" @onclick="Guardar"><span class="bi bi-check-circle-fill"></span> Guardar </button>
+            <a type="button" href="/Ciudad/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Retroceder </a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int? CiudadId { get; set; }
+    public Ciudad ciudad { get; set; } = new Ciudad();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (CiudadId.HasValue)
+        {
+            ciudad.CiudadId = CiudadId.Value;
+            await Buscar();
+        }
+    }
+
+    public void Nuevo()
+    {
+        ciudad = new Ciudad();
+    }
+
+    public async Task Buscar()
+    {
+        var ciudadEncontrada = await ciudadService.Buscar(ciudad.CiudadId);
+
+        if (ciudadEncontrada != null)
+        {
+            ciudad = ciudadEncontrada;
+        }
+    }
+
+    public async Task Guardar()
+    {
+        var guardo = await ciudadService.Modificar(ciudad);
+        if (guardo)
+        {
+            Nuevo();
+            navigationManager.NavigateTo("/Ciudad/Index");
+        }
+    }
+
+    public async Task Eliminar()
+    {
+        var eliminado = await ciudadService.Eliminar(ciudad.CiudadId);
+        if (eliminado)
+        {
+            Nuevo();
+            navigationManager.NavigateTo("/Ciudad/Index");
+        }
+    }
+}
