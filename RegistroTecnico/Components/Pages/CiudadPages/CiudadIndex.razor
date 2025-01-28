@@ -1,0 +1,127 @@
+﻿@page "/Ciudad/Index"
+@using RegistroTecnico.Services
+@using RegistroTecnico.Models
+@inject CiudadService ciudadService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Listado de Ciudades</PageTitle>
+
+<div class="shadow-lg">
+    <div class="card shadow-lg border-0 rounded" style="background-color: #f8f9fa;">
+        <div class="card-header bg-primary text-white text-center">
+            <h3><strong>Listado de Ciudades</strong></h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    <label class="col-form-label"><strong>Filtrar por</strong></label>
+                </div>
+
+                <div class="col-4">
+                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                </div>
+            </div>
+
+            <div class="row align-items-center mb-3">
+                <div class="col-3">
+                    <InputSelect class="form-select" @bind-Value="Filtro">
+                        <option value="" selected disabled>Elija una opci&oacute;n</option>
+                        <option value="CiudadId">CiudadID</option>
+                        <option value="Nombre">Nombre</option>
+                    </InputSelect>
+                </div>
+
+                <div class="col-4">
+                    <div class="input-group">
+                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary" @onclick="Buscar">Buscar</button>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <button type="button" class="btn btn-primary" @onclick="PantallaCrear">
+                        <span class=></span> Crear
+                    </button>
+                </div>
+            </div>
+
+            <table class="table table-bordered text-center mt-4">
+                <thead>
+                    <tr>
+                        <th>CiudadID</th>
+                        <th>Nombre</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ciudad in ListaCiudades)
+                    {
+                        <tr>
+                            <td>@ciudad.CiudadId</td>
+                            <td>@ciudad.Nombre</td>
+                            <td>
+                                <button type="button" class="btn btn-warning bi bi-pencil-square"
+                                        @onclick="() => PantallaEditar(ciudad.CiudadId)">
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger bi bi-trash"
+                                        @onclick="() => PantallaEliminar(ciudad.CiudadId)">
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer">
+            <p><strong>Total de Ciudades: </strong>@ListaCiudades.Count</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Ciudad> ListaCiudades { get; set; } = new List<Ciudad>();
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaCiudades = await ciudadService.Listar(c => c.CiudadId > 0);
+    }
+
+    public void PantallaCrear() => navigationManager.NavigateTo("/Ciudad/Create");
+
+    public void PantallaEditar(int id)
+    {
+        navigationManager.NavigateTo($"/Ciudad/Edit/{id}");
+    }
+
+    public void PantallaEliminar(int id)
+    {
+        navigationManager.NavigateTo($"/Ciudad/Delete/{id}");
+    }
+
+    private async Task Buscar()
+    {
+        if (!string.IsNullOrWhiteSpace(ValorFiltro))
+        {
+            if (Filtro == "CiudadId" && int.TryParse(ValorFiltro, out int ciudadId))
+            {
+                ListaCiudades = await ciudadService.Listar(c => c.CiudadId == ciudadId);
+            }
+            else if (Filtro == "Nombre")
+            {
+                ListaCiudades = await ciudadService.Listar(c => c.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
+            }
+        }
+        else
+        {
+            ListaCiudades = await ciudadService.Listar(c => c.CiudadId > 0);
+        }
+    }
+}
