@@ -1,16 +1,30 @@
-﻿using RegistroTecnico.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RegistroTecnico.Models;
+
+using RegistroTecnico.Models;
 using Microsoft.EntityFrameworkCore;
 
-
-
-namespace RegistroTecnico.DAL;
-
-public class Contexto : DbContext
+namespace RegistroTecnico.DAL
 {
-    public Contexto(DbContextOptions<Contexto> options) : base(options) { }
-    public DbSet<Tecnicos> Tecnicos { get; set; }
+    public class Contexto : DbContext
+    {
+        public Contexto(DbContextOptions<Contexto> options) : base(options) { }
 
-    public DbSet<Clientes> Clientes { get; set; }
-    public DbSet<Ciudad> Ciudad { get; set; }
+        public DbSet<Tecnicos> Tecnicos { get; set; }
+        public DbSet<Clientes> Clientes { get; set; }
+        public DbSet<Ciudad> Ciudad { get; set; }
+        public DbSet<Tickets> Tickets { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+   
+            modelBuilder.Entity<Tickets>()
+                .HasOne(t => t.Tecnicos)              
+                .WithMany()                          
+                .HasForeignKey(t => t.TecnicoId)      
+                .OnDelete(DeleteBehavior.Restrict);   
+        }
+    }
 }

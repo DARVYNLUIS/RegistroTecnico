@@ -91,17 +91,24 @@ namespace RegistroTecnico.Services
                 .FirstOrDefaultAsync(c => c.RNC == rnc);
         }
 
-
         public async Task<bool> CrearCliente(Clientes cliente)
         {
             if (await ExistePorRnc(cliente.RNC) || await ExistePorNombre(cliente.Nombres))
             {
-                return false; 
+                return false;
             }
 
             await using var contexto = await DbFactory.CreateDbContextAsync();
             contexto.Clientes.Add(cliente);
             return await contexto.SaveChangesAsync() > 0;
         }
+
+        // Nueva función ObtenerLista
+        public async Task<List<Clientes>> ObtenerLista()
+        {
+            await using var contexto = await DbFactory.CreateDbContextAsync();
+            return await contexto.Clientes.AsNoTracking().ToListAsync();
+        }
     }
 }
+

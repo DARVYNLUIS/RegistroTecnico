@@ -62,9 +62,50 @@ namespace RegistroTecnico.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Tickets",
+                columns: table => new
+                {
+                    TicketId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Prioridad = table.Column<int>(type: "int", nullable: false),
+                    ClienteId = table.Column<int>(type: "int", nullable: false),
+                    Asunto = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TiempoInvertido = table.Column<int>(type: "int", nullable: false),
+                    TecnicoId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tickets", x => x.TicketId);
+                    table.ForeignKey(
+                        name: "FK_Tickets_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "ClienteId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Tickets_Tecnicos_TecnicoId",
+                        column: x => x.TecnicoId,
+                        principalTable: "Tecnicos",
+                        principalColumn: "TecnicoId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Clientes_TecnicoId",
                 table: "Clientes",
+                column: "TecnicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_ClienteId",
+                table: "Tickets",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_TecnicoId",
+                table: "Tickets",
                 column: "TecnicoId");
         }
 
@@ -73,6 +114,9 @@ namespace RegistroTecnico.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Ciudad");
+
+            migrationBuilder.DropTable(
+                name: "Tickets");
 
             migrationBuilder.DropTable(
                 name: "Clientes");

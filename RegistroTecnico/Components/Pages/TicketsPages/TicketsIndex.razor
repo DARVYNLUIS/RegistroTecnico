@@ -1,11 +1,11 @@
-﻿@page "/Ciudad/Index"
-@inject CiudadService ciudadService
+﻿@page "/Tickets/Index"
+@inject TicketService ticketService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
 <div class="border shadow-lg p-3 rounded">
     <div class="card-header bg-primary text-white text-center py-2 rounded">
-        <h3 style="font-weight: bold;" class="mb-0">Listado de Ciudades</h3>
+        <h3 class="mb-0">Listado de Tickets</h3>
     </div>
     <div class="card-body">
         <div class="row mb-3 align-items-end">
@@ -13,8 +13,9 @@
                 <label for="Filtro" class="form-label">Filtrar por:</label>
                 <select @bind="Filtro" class="form-select">
                     <option value="" selected disabled>Elija una opción</option>
-                    <option value="CiudadId">CiudadID</option>
-                    <option value="Nombre">Nombre</option>
+                    <option value="TicketId">TicketID</option>
+                    <option value="Asunto">Asunto</option>
+                    <option value="Prioridad">Prioridad</option>
                 </select>
             </div>
             <div class="col-md-6">
@@ -27,36 +28,48 @@
                 </div>
             </div>
             <div class="col-md-3 text-end">
-                <button @onclick="PantallaCrear" class="btn btn-success" type="button">
+                <a href="/Tickets/Create" class="btn btn-success" type="button">
                     <span class="bi bi-plus-circle"></span> Crear
-                </button>
+                </a>
             </div>
         </div>
 
         <table class="table table-bordered text-center">
             <thead class="bg-primary text-white">
                 <tr>
-                    <th>ID de Ciudad</th>
-                    <th>Nombre</th>
+                    <th>ID de Ticket</th>
+                    <th>Fecha</th>
+                    <th>Prioridad</th>
+                    <th>ClienteID</th>
+                    <th>Asunto</th>
+                    <th>Descripción</th>
+                    <th>Tiempo Invertido</th>
+                    <th>TécnicoID</th>
                     <th>Editar</th>
                     <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var ciudad in ListaCiudades)
+                @foreach (var ticket in ListaTickets)
                 {
                     <tr>
-                        <td>@ciudad.CiudadId</td>
-                        <td>@ciudad.Nombre</td>
+                        <td>@ticket.TicketId</td>
+                        <td>@ticket.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@ticket.Prioridad</td>
+                        <td>@ticket.ClienteId</td>
+                        <td>@ticket.Asunto</td>
+                        <td>@ticket.Descripcion</td>
+                        <td>@ticket.TiempoInvertido</td>
+                        <td>@ticket.TecnicoId</td>
                         <td>
-                            <button type="button" class="btn btn-outline-success" @onclick="() => PantallaEditar(ciudad.CiudadId)">
+                            <a class="btn btn-outline-success" href="/Tickets/Edit/@ticket.TicketId">
                                 <span class="bi bi-pencil-square"></span>
-                            </button>
+                            </a>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-outline-danger" @onclick="() => PantallaEliminar(ciudad.CiudadId)">
+                            <a class="btn btn-outline-danger" href="/Tickets/Delete/@ticket.TicketId">
                                 <span class="bi bi-trash"></span>
-                            </button>
+                            </a>
                         </td>
                     </tr>
                 }
@@ -65,43 +78,34 @@
     </div>
 
     <div class="card-footer text-end">
-        <p><strong>Total de Ciudades: </strong>@ListaCiudades.Count</p>
+        <p><strong>Total de Tickets: </strong>@ListaTickets.Count</p>
     </div>
 </div>
 
 @code {
-    public List<Ciudad> ListaCiudades { get; set; } = new List<Ciudad>();
+    public List<Tickets> ListaTickets { get; set; } = new List<Tickets>();
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        ListaCiudades = await ciudadService.Listar(c => c.CiudadId > 0);
+        ListaTickets = await ticketService.Listar(t => t.TicketId > 0);
     }
 
-    public void PantallaCrear() => navigationManager.NavigateTo("/Ciudad/Create");
-    public void PantallaEditar(int id) => navigationManager.NavigateTo($"/Ciudad/Edit/{id}");
-    public void PantallaEliminar(int id) => navigationManager.NavigateTo($"/Ciudad/Delete/{id}");
+    public void PantallaCrear() => navigationManager.NavigateTo("/Tickets/Create");
 
     private async Task Buscar()
     {
         if (!string.IsNullOrWhiteSpace(ValorFiltro))
         {
-            if (Filtro == "CiudadId" && int.TryParse(ValorFiltro, out int ciudadId))
-                ListaCiudades = await ciudadService.Listar(c => c.CiudadId == ciudadId);
-            else if (Filtro == "Nombre")
-                ListaCiudades = await ciudadService.Listar(c => c.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
+            if (Filtro == "TicketId" && int.TryParse(ValorFiltro, out int ticketId))
+                ListaTickets = await ticketService.Listar(t => t.TicketId == ticketId);
+            else if (Filtro == "Asunto")
+                ListaTickets = await ticketService.Listar(t => t.Asunto.ToLower().Contains(ValorFiltro.ToLower()));
         }
         else
         {
-            ListaCiudades = await ciudadService.Listar(c => c.CiudadId > 0);
+            ListaTickets = await ticketService.Listar(t => t.TicketId > 0);
         }
-    }
-
-    private async Task Restablecer()
-    {
-        ListaCiudades = await ciudadService.Listar(c => c.CiudadId > 0);
-        Filtro = string.Empty;
-        ValorFiltro = string.Empty;
     }
 }

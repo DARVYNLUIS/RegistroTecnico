@@ -12,7 +12,7 @@ using RegistroTecnico.DAL;
 namespace RegistroTecnico.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20250127232443_Inicial")]
+    [Migration("20250201185637_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -98,6 +98,47 @@ namespace RegistroTecnico.Migrations
                     b.ToTable("Tecnicos");
                 });
 
+            modelBuilder.Entity("RegistroTecnico.Models.Tickets", b =>
+                {
+                    b.Property<int>("TicketId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TicketId"));
+
+                    b.Property<string>("Asunto")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Prioridad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TecnicoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TiempoInvertido")
+                        .HasColumnType("int");
+
+                    b.HasKey("TicketId");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("TecnicoId");
+
+                    b.ToTable("Tickets");
+                });
+
             modelBuilder.Entity("RegistroTecnico.Models.Clientes", b =>
                 {
                     b.HasOne("RegistroTecnico.Models.Tecnicos", "Tecnicos")
@@ -105,6 +146,25 @@ namespace RegistroTecnico.Migrations
                         .HasForeignKey("TecnicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Tecnicos");
+                });
+
+            modelBuilder.Entity("RegistroTecnico.Models.Tickets", b =>
+                {
+                    b.HasOne("RegistroTecnico.Models.Clientes", "Clientes")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RegistroTecnico.Models.Tecnicos", "Tecnicos")
+                        .WithMany()
+                        .HasForeignKey("TecnicoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Clientes");
 
                     b.Navigation("Tecnicos");
                 });
