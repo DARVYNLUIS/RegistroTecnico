@@ -158,7 +158,7 @@ namespace RegistroTecnico.Migrations
                     b.HasOne("RegistroTecnico.Models.Tecnicos", "Tecnicos")
                         .WithMany()
                         .HasForeignKey("TecnicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Clientes");
