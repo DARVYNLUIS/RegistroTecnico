@@ -3,8 +3,7 @@
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
-<EditForm Model="ListaCiudades" class="border shadow-lg p-3 rounded">
-
+<div class="border shadow-lg p-3 rounded">
     <div class="card-header bg-primary text-white text-center py-2 rounded">
         <h3 style="font-weight: bold;" class="mb-0">Listado de Ciudades</h3>
     </div>
@@ -68,12 +67,10 @@
     <div class="card-footer text-end">
         <p><strong>Total de Ciudades: </strong>@ListaCiudades.Count</p>
     </div>
-
-</EditForm>
+</div>
 
 @code {
     public List<Ciudad> ListaCiudades { get; set; } = new List<Ciudad>();
-
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
@@ -83,20 +80,12 @@
     }
 
     public void PantallaCrear() => navigationManager.NavigateTo("/Ciudad/Create");
-
-    public void PantallaEditar(int id)
-    {
-        navigationManager.NavigateTo($"/Ciudad/Edit/{id}");
-    }
-
-    public void PantallaEliminar(int id)
-    {
-        navigationManager.NavigateTo($"/Ciudad/Delete/{id}");
-    }
+    public void PantallaEditar(int id) => navigationManager.NavigateTo($"/Ciudad/Edit/{id}");
+    public void PantallaEliminar(int id) => navigationManager.NavigateTo($"/Ciudad/Delete/{id}");
 
     private async Task Buscar()
     {
-        if (ValorFiltro.Trim() != "")
+        if (!string.IsNullOrWhiteSpace(ValorFiltro))
         {
             if (Filtro == "CiudadId" && int.TryParse(ValorFiltro, out int ciudadId))
                 ListaCiudades = await ciudadService.Listar(c => c.CiudadId == ciudadId);

@@ -3,65 +3,72 @@
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
-<div class="card shadow-lg border-0 rounded" style="background-color: #f8f9fa;">
-    <div class="card-header bg-primary text-white" style="text-align: center;">
-        <h3> <i class="fas fa-clipboard-list"></i> Editar Cliente</h3>
-    </div>
+<EditForm Model="cliente" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card shadow-lg border-0 rounded">
+        <div class="card-header bg-primary text-white text-center">
+            <h3><i class="fas fa-clipboard-list"></i> Editar Cliente</h3>
+        </div>
 
-    <div class="card-body">
+        <div class="card-body">
 
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="ClienteId" class="form-label">ID Cliente:</label>
-                <div class="input-group">
-                    <div style="width: 40%; height: 1em;">
-                        <InputNumber @bind-Value="cliente.ClienteId" class="form-control" style="font-size: 0.8em;" aria-describedby="BotonBuscar" disabled />
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="ClienteId" class="form-label">ID Cliente:</label>
+                    <div class="input-group">
+                        <InputNumber @bind-Value="cliente.ClienteId" class="form-control" disabled />
                     </div>
                 </div>
             </div>
+
+            <div class="mb-3">
+                <label for="Nombres" class="form-label">Nombres:</label>
+                <InputText @bind-Value="cliente.Nombres" class="form-control" />
+                <ValidationMessage For="@(() => cliente.Nombres)" />
+            </div>
+
+            <div class="mb-3">
+                <ClientesEdit />
+                <label for="Direccion" class="form-label">Dirección:</label>
+                <InputText @bind-Value="cliente.Direccion" class="form-control" />
+                <ValidationMessage For="@(() => cliente.Direccion)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="RNC" class="form-label">RNC:</label>
+                <InputText @bind-Value="cliente.RNC" class="form-control" maxlength="11" @oninput="ValidarRNC" />
+                <ValidationMessage For="@(() => cliente.RNC)" />
+                @if (!string.IsNullOrEmpty(RncErrorMessage))
+                {
+                    <div class="alert alert-danger mt-3">
+                        @RncErrorMessage
+                    </div>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label for="LimiteCredito" class="form-label">Límite de Crédito:</label>
+                <InputNumber @bind-Value="cliente.LimiteCredito" class="form-control" />
+                <ValidationMessage For="@(() => cliente.LimiteCredito)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="TecnicoId" class="form-label">Técnico:</label>
+                <InputNumber @bind-Value="cliente.TecnicoId" class="form-control" />
+                <ValidationMessage For="@(() => cliente.TecnicoId)" />
+            </div>
+
         </div>
 
-        <div class="mb-3">
-            <label for="Nombres" class="form-label">Nombres:</label>
-            <InputText @bind-Value="cliente.Nombres" class="form-control" />
+        <div class="card-footer bg-light d-flex justify-content-center mt-3">
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>
+                <button type="submit" class="btn btn-outline-success ml-2"><span class="bi bi-check-circle-fill"></span> Guardar </button>
+                <a type="button" href="/Clientes/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Retroceder </a>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label for="Direccion" class="form-label">Dirección:</label>
-            <InputText @bind-Value="cliente.Direccion" class="form-control" />
-        </div>
-
-        <div class="mb-3">
-            <label for="RNC" class="form-label">RNC:</label>
-            <InputText @bind-Value="cliente.RNC" class="form-control" maxlength="11" @oninput="ValidarRNC" />
-            @if (!string.IsNullOrEmpty(RncErrorMessage))
-            {
-                <div class="alert alert-danger mt-3">
-                    @RncErrorMessage
-                </div>
-            }
-        </div>
-
-        <div class="mb-3">
-            <label for="LimiteCredito" class="form-label">Límite de Crédito:</label>
-            <InputNumber @bind-Value="cliente.LimiteCredito" class="form-control" />
-        </div>
-
-        <div class="mb-3">
-            <label for="TecnicoId" class="form-label">Técnico:</label>
-            <InputNumber @bind-Value="cliente.TecnicoId" class="form-control" />
-        </div>
-
     </div>
-
-    <div class="card-footer bg-light d-flex justify-content-center mt-3">
-        <div class="btn-group">
-            <button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>
-            <button type="button" class="btn btn-outline-success ml-2" @onclick="Guardar"><span class="bi bi-check-circle-fill"></span> Guardar </button>
-            <a type="button" href="/Clientes/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Retroceder </a>
-        </div>
-    </div>
-</div>
+</EditForm>
 
 @code {
     [Parameter]
@@ -81,6 +88,7 @@
     public void Nuevo()
     {
         cliente = new Clientes();
+        RncErrorMessage = string.Empty;
     }
 
     public async Task Buscar()
@@ -95,7 +103,6 @@
 
     public async Task<bool> ValidarRNC()
     {
-        
         if (!cliente.RNC.All(char.IsDigit))
         {
             RncErrorMessage = "El RNC solo puede contener números.";
@@ -108,7 +115,6 @@
             return false;
         }
 
-        
         var clienteExistente = await clienteService.ObtenerClientePorRnc(cliente.RNC);
         if (clienteExistente != null && clienteExistente.ClienteId != cliente.ClienteId)
         {
@@ -116,7 +122,7 @@
             return false;
         }
 
-        RncErrorMessage = string.Empty; 
+        RncErrorMessage = string.Empty;
         return true;
     }
 

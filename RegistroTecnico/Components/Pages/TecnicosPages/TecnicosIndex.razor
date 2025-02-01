@@ -3,89 +3,72 @@
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Index</PageTitle>
-
-
-<div class="shadow-lg">
-
-    <div class="card shadow-lg border-0 rounded" style="background-color: #f8f9fa;">
-        <div class="card-header bg-primary text-white" style="text-align: center;">
-            <h3><strong>Listado de T&eacute;cnicos</strong></h3>
+<div class="border shadow-lg p-3 rounded">
+    <div class="card-header bg-primary text-white text-center py-2 rounded">
+        <h3 class="mb-0">Listado de Técnicos</h3>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3 align-items-end">
+            <div class="col-md-3">
+                <label for="Filtro" class="form-label">Filtrar por:</label>
+                <select @bind="Filtro" class="form-select">
+                    <option value="" selected disabled>Elija una opción</option>
+                    <option value="Id">ID</option>
+                    <option value="Nombres">Nombre</option>
+                    <option value="SueldoHora">Sueldo/Hora</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="ValorFiltro" class="form-label">Búsqueda:</label>
+                <div class="input-group">
+                    <input @bind="ValorFiltro" class="form-control" placeholder="Buscar" />
+                    <button @onclick="Buscar" class="btn btn-outline-primary" type="button">
+                        <span class="bi bi-search"></span> Buscar
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3 text-end">
+                <button @onclick="PantallaCrear" class="btn btn-success" type="button">
+                    <span class="bi bi-plus-circle"></span> Crear
+                </button>
+            </div>
         </div>
 
-        <div class="card-body">
-            <div class="row">
-                <div class="col-3">
-                    <label class="col-form-label"><strong>Filtrar por</strong></label>
-                </div>
-
-                <div class="col-4">
-                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
-                </div>
-            </div>
-
-            <div class="row align-items-center">
-                <div class="col-3">
-                    <InputSelect class="form-select" @bind-Value="Filtro">
-                        <option value="" selected disabled>Elija una opci&oacute;n</option>
-                        <option value="Id">Id</option>
-                        <option value="Nombres">Nombre</option>
-                        <option value="SueldoHora">Sueldo/Hora</option>
-                    </InputSelect>
-                </div>
-
-                <div class="col-4">
-                    <div class="input-group">
-                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
-                        <button type="button" class="btn btn-outline-primary" @onclick="Buscar">Buscar
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3">
-                <button type="button" class="btn btn-primary" @onclick="PantallaCrear"> Crear</button>
-            </div>
-
-
-            <table class="table table-bordered text-center mt-4">
-                <thead>
+        <table class="table table-bordered text-center">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>ID de Técnico</th>
+                    <th>Nombres</th>
+                    <th>Sueldo/Hora</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tecnico in ListaTecnicos)
+                {
                     <tr>
-                        <th>ID de Tecnico</th>
-                        <th>Nombres</th>
-                        <th>Sueldo/Hora</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
+                        <td>@tecnico.TecnicoId</td>
+                        <td>@tecnico.Nombres</td>
+                        <td>@($"{tecnico.SueldoHora:N2}")</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-success" @onclick="() => PantallaEditar(tecnico.TecnicoId)">
+                                <span class="bi bi-pencil-square"></span>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-danger" @onclick="() => PantallaEliminar(tecnico.TecnicoId)">
+                                <span class="bi bi-trash"></span>
+                            </button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var tecnico in ListaTecnicos)
-                    {
-                        <tr>
-                            <td>@tecnico.TecnicoId</td>
-                            <td>@tecnico.Nombres</td>
-                            <td>@($"{tecnico.SueldoHora:N2}")</td>
+                }
+            </tbody>
+        </table>
+    </div>
 
-                            <td>
-                                <button type="button" class="btn btn-warning bi bi-pencil-square" @onclick="() => PantallaEditar(tecnico.TecnicoId)">
-
-                                </button>
-                            </td>
-
-                            <td>
-                                <button type="button" class="btn btn-danger bi bi-trash" @onclick="() => PantallaEliminar(tecnico.TecnicoId)">
-
-
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <div class="card-footer">
-            <p><strong>Total de T&eacute;cnicos: </strong>@ListaTecnicos.Count</p>
-        </div>
+    <div class="card-footer text-end">
+        <p><strong>Total de Técnicos: </strong>@ListaTecnicos.Count</p>
     </div>
 </div>
 
@@ -102,7 +85,6 @@
 
     public void PantallaCrear() => navigationManager.NavigateTo("/Tecnicos/Create");
 
- 
     public void PantallaEditar(int id)
     {
         navigationManager.NavigateTo($"/Tecnicos/Edit/{id}");
@@ -125,7 +107,6 @@
             {
                 ListaTecnicos = await tecnicoService.Listar(e => e.SueldoHora == (decimal)sueldoHora);
             }
-           ;
         }
         else
         {
