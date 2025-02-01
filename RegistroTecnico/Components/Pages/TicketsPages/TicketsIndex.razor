@@ -5,7 +5,7 @@
 
 <div class="border shadow-lg p-3 rounded">
     <div class="card-header bg-primary text-white text-center py-2 rounded">
-        <h3 style="font-weight: bold;" class="mb-0">Listado de Tickets</h3>
+        <h3 class="mb-0">Listado de Tickets</h3>
     </div>
     <div class="card-body">
         <div class="row mb-3 align-items-end">
@@ -45,7 +45,7 @@
                     <th>Descripción</th>
                     <th>Tiempo Invertido</th>
                     <th>TécnicoID</th>
-                    <th>Ver</th>
+                    <th>Editar</th>
                     <th>Eliminar</th>
                 </tr>
             </thead>
@@ -62,13 +62,13 @@
                         <td>@ticket.TiempoInvertido</td>
                         <td>@ticket.TecnicoId</td>
                         <td>
-                            <a class="btn btn-outline-primary" href="/Tickets/Details/@ticket.TicketId">
-                                <span class="bi bi-info-circle-fill"></span>
+                            <a class="btn btn-outline-success" href="/Tickets/Edit/@ticket.TicketId">
+                                <span class="bi bi-pencil-square"></span>
                             </a>
                         </td>
                         <td>
-                            <a class="btn btn-outline-warning" href="/Tickets/Delete/@ticket.TicketId">
-                                <span class="bi bi-dash-circle-fill"></span>
+                            <a class="btn btn-outline-danger" href="/Tickets/Delete/@ticket.TicketId">
+                                <span class="bi bi-trash"></span>
                             </a>
                         </td>
                     </tr>
