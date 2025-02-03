@@ -10,7 +10,7 @@ public class Clientes
 
     public DateTime FechaIngreso { get; set; } = DateTime.Now;
 
-    [Required(ErrorMessage = "El Nombres obligatorio")]
+    [Required(ErrorMessage = "El Nombre es obligatorio")]
     [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "No se permiten Numeros")]
     public string? Nombres { get; set; }
 
