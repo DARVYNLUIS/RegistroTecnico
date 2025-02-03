@@ -48,7 +48,7 @@ namespace RegistroTecnico.Services
 
         public async Task<bool> Guardar(Clientes cliente)
         {
-            if (!await Existe(cliente.TecnicoId))
+            if (!await Existe(cliente.ClienteId))
                 return await Insertar(cliente);
             else
                 return await Modificar(cliente);
