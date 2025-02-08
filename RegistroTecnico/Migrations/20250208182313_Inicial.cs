@@ -25,13 +25,27 @@ namespace RegistroTecnico.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Sistemas",
+                columns: table => new
+                {
+                    SistemaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Complejidad = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sistemas", x => x.SistemaId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tecnicos",
                 columns: table => new
                 {
                     TecnicoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombres = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SueldoHora = table.Column<int>(type: "int", nullable: false)
+                    SueldoHora = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -114,6 +128,9 @@ namespace RegistroTecnico.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Ciudad");
+
+            migrationBuilder.DropTable(
+                name: "Sistemas");
 
             migrationBuilder.DropTable(
                 name: "Tickets");

@@ -48,7 +48,7 @@ namespace RegistroTecnico.Services
 
         public async Task<bool> Guardar(Clientes cliente)
         {
-            if (!await Existe(cliente.TecnicoId))
+            if (!await Existe(cliente.ClienteId))
                 return await Insertar(cliente);
             else
                 return await Modificar(cliente);
@@ -103,7 +103,7 @@ namespace RegistroTecnico.Services
             return await contexto.SaveChangesAsync() > 0;
         }
 
-        // Nueva función ObtenerLista
+ 
         public async Task<List<Clientes>> ObtenerLista()
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();

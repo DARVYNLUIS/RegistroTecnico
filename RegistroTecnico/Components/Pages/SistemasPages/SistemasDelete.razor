@@ -1,0 +1,55 @@
+﻿@page "/Sistemas/Delete/{id:int}"
+@inject SistemaService sistemaService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<h3 class="text-center text-danger">¿Está seguro de que desea eliminar este sistema?</h3>
+
+@if (sistema != null)
+{
+    <div class="card shadow-lg border-0 rounded p-3">
+        <div class="card-body">
+            <p><strong>ID:</strong> @sistema.SistemaId</p>
+            <p><strong>Descripción:</strong> @sistema.Descripcion</p>
+            <p><strong>Complejidad:</strong> @sistema.Complejidad</p>
+        </div>
+        <div class="card-footer d-flex justify-content-center">
+            <button @onclick="Eliminar" class="btn btn-danger mx-2">
+                <span class="bi bi-trash"></span> Eliminar
+            </button>
+            <button @onclick="Cancelar" class="btn btn-secondary">
+                <span class="bi bi-x-circle"></span> Cancelar
+            </button>
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-center text-warning">El sistema no existe o ya ha sido eliminado.</p>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    private Sistemas? sistema;
+
+    protected override async Task OnInitializedAsync()
+    {
+        sistema = await sistemaService.Buscar(id);
+    }
+
+    private async Task Eliminar()
+    {
+        if (sistema != null)
+        {
+            await sistemaService.Eliminar(sistema.SistemaId);
+            navigationManager.NavigateTo("/Sistemas/Index");
+        }
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Sistemas/Index");
+    }
+}

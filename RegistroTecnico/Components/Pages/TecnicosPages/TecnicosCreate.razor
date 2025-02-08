@@ -3,38 +3,36 @@
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
-<EditForm Model="tecnico" OnValidSubmit="Guardar">
+<EditForm Model="tecnicos" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
     <div class="card shadow-lg border-0 rounded">
         <div class="card-header bg-primary text-white text-center">
-            <h3> <i class="fas fa-clipboard-list"></i> Registro Técnico</h3>
+            <h3> <i class="fas fa-clipboard-list"></i> Registro de Técnico</h3>
         </div>
 
         <div class="card-body">
             @* TecnicoId *@
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="tecnicoID" class="form-label">ID del Técnico:</label>
-                    <InputNumber @bind-Value="tecnico.TecnicoId" class="form-control" aria-describedby="BotonBuscar" />
-                </div>
-            </div>
-
-            @* Sueldo por hora *@
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="SueldoHora" class="form-label">Sueldo por hora:</label>
-                    <InputNumber @bind-Value="tecnico.SueldoHora" class="form-control" />
+                    <label for="TecnicoId" class="form-label">ID del Técnico:</label>
+                    <InputNumber @bind-Value="tecnicos.TecnicoId" TValue="int" class="form-control" aria-describedby="BotonBuscar" />
                 </div>
             </div>
 
             @* Nombre del técnico *@
             <div class="mb-3">
-                <label for="Nombre" class="form-label">Nombre del Técnico:</label>
-                <InputText @bind-Value="tecnico.Nombres" class="form-control" />
-                <ValidationMessage For="@(() => tecnico.Nombres)" />
+                <label for="Nombres" class="form-label">Nombre del Técnico:</label>
+                <InputText @bind-Value="tecnicos.Nombres" class="form-control" />
+                <ValidationMessage For="@(() => tecnicos.Nombres)" />
             </div>
 
+            @* Sueldo por hora *@
+            <div class="mb-3">
+                <label for="SueldoHora" class="form-label">Sueldo por hora:</label>
+                <InputNumber @bind-Value="tecnicos.SueldoHora" TValue="decimal" class="form-control" />
+                <ValidationMessage For="@(() => tecnicos.SueldoHora)" />
+            </div>
         </div>
 
         <div class="card-footer bg-light d-flex justify-content-center mt-3">
@@ -48,18 +46,18 @@
 </EditForm>
 
 @code {
-    public Tecnicos tecnico { get; set; } = new Tecnicos();
+    public Tecnicos tecnicos { get; set; } = new Tecnicos();
     private bool Existe = false;
 
     public void Nuevo()
     {
-        tecnico = new Tecnicos();
+        tecnicos = new Tecnicos();
         Existe = false;
     }
 
     public async Task<bool> Validar()
     {
-        Existe = await tecnicoService.ExistePorNombre(tecnico.Nombres);
+        Existe = await tecnicoService.Existe(tecnicos.TecnicoId);
         return !Existe;
     }
 
@@ -70,16 +68,10 @@
             return;
         }
 
-        var guardo = await tecnicoService.Guardar(tecnico);
+        var guardo = await tecnicoService.Guardar(tecnicos);
         if (guardo)
         {
             Nuevo();
         }
-    }
-
-    public async Task Eliminar()
-    {
-        var eliminado = await tecnicoService.Eliminar(tecnico.TecnicoId);
-        Nuevo();
     }
 }

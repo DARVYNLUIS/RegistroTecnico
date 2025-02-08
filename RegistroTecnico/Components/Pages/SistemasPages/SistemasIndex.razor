@@ -1,11 +1,11 @@
-﻿@page "/Tecnicos/Index"
-@inject TecnicoService tecnicoService
+﻿@page "/Sistemas/Index"
+@inject SistemaService sistemaService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
 <div class="border shadow-lg p-3 rounded">
     <div class="card-header bg-primary text-white text-center py-2 rounded">
-        <h3 class="mb-0">Listado de Técnicos</h3>
+        <h3 class="mb-0">Listado de Sistemas</h3>
     </div>
     <div class="card-body">
         <div class="row mb-3 align-items-end">
@@ -14,8 +14,8 @@
                 <select @bind="Filtro" class="form-select">
                     <option value="" selected disabled>Elija una opción</option>
                     <option value="Id">ID</option>
-                    <option value="Nombres">Nombre</option>
-                    <option value="SueldoHora">Sueldo/Hora</option>
+                    <option value="Descripcion">Descripción</option>
+                    <option value="Complejidad">Complejidad</option>
                 </select>
             </div>
             <div class="col-md-6">
@@ -37,27 +37,27 @@
         <table class="table table-bordered text-center">
             <thead class="bg-primary text-white">
                 <tr>
-                    <th>ID de Técnico</th>
-                    <th>Nombres</th>
-                    <th>Sueldo/Hora</th>
+                    <th>ID de Sistema</th>
+                    <th>Descripción</th>
+                    <th>Complejidad</th>
                     <th>Editar</th>
                     <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var tecnico in ListaTecnicos)
+                @foreach (var sistema in ListaSistemas)
                 {
                     <tr>
-                        <td>@tecnico.TecnicoId</td>
-                        <td>@tecnico.Nombres</td>
-                        <td>@($"{tecnico.SueldoHora:N2}")</td>
+                        <td>@sistema.SistemaId</td>
+                        <td>@sistema.Descripcion</td>
+                        <td>@sistema.Complejidad</td>
                         <td>
-                            <button type="button" class="btn btn-outline-success" @onclick="() => PantallaEditar(tecnico.TecnicoId)">
+                            <button type="button" class="btn btn-outline-success" @onclick="() => PantallaEditar(sistema.SistemaId)">
                                 <span class="bi bi-pencil-square"></span>
                             </button>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-outline-danger" @onclick="() => PantallaEliminar(tecnico.TecnicoId)">
+                            <button type="button" class="btn btn-outline-danger" @onclick="() => PantallaEliminar(sistema.SistemaId)">
                                 <span class="bi bi-trash"></span>
                             </button>
                         </td>
@@ -68,53 +68,47 @@
     </div>
 
     <div class="card-footer text-end">
-        <p><strong>Total de Técnicos: </strong>@ListaTecnicos.Count</p>
+        <p><strong>Total de Sistemas: </strong>@ListaSistemas.Count</p>
     </div>
 </div>
 
 @code {
-    public List<Tecnicos> ListaTecnicos { get; set; } = new List<Tecnicos>();
+    public List<Sistemas> ListaSistemas { get; set; } = new List<Sistemas>();
 
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
+        ListaSistemas = await sistemaService.Listar(e => e.SistemaId > 0);
     }
 
-    public void PantallaCrear() => navigationManager.NavigateTo("/Tecnicos/Create");
+    public void PantallaCrear() => navigationManager.NavigateTo("/Sistemas/Create");
 
     public void PantallaEditar(int id)
     {
-        navigationManager.NavigateTo($"/Tecnicos/Edit/{id}");
+        navigationManager.NavigateTo($"/Sistemas/Edit/{id}");
     }
 
     public void PantallaEliminar(int id)
     {
-        navigationManager.NavigateTo($"/Tecnicos/Delete/{id}");
+        navigationManager.NavigateTo($"/Sistemas/Delete/{id}");
     }
 
     private async Task Buscar()
     {
         if (ValorFiltro.Trim() != "")
         {
-            if (Filtro == "Id" && int.TryParse(ValorFiltro, out int tecnicoId))
-                ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId == tecnicoId);
-            else if (Filtro == "Nombres")
-                ListaTecnicos = await tecnicoService.Listar(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
-            else if (Filtro == "SueldoHora" && double.TryParse(ValorFiltro, out double sueldoHora)) ;
+            if (Filtro == "Id" && int.TryParse(ValorFiltro, out int sistemaId))
+                ListaSistemas = await sistemaService.Listar(e => e.SistemaId == sistemaId);
+            else if (Filtro == "Descripcion")
+                ListaSistemas = await sistemaService.Listar(e => e.Descripcion.ToLower().Contains(ValorFiltro.ToLower()));
+            else if (Filtro == "Complejidad" && int.TryParse(ValorFiltro, out int complejidad))
+                ListaSistemas = await sistemaService.Listar(e => e.Complejidad == complejidad);
         }
         else
         {
-            ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
+            ListaSistemas = await sistemaService.Listar(e => e.SistemaId > 0);
         }
-    }
-
-    private async Task Restablecer()
-    {
-        ListaTecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
-        Filtro = string.Empty;
-        ValorFiltro = string.Empty;
     }
 }
