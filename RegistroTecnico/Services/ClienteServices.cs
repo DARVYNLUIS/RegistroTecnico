@@ -103,7 +103,7 @@ namespace RegistroTecnico.Services
             return await contexto.SaveChangesAsync() > 0;
         }
 
-        // Nueva función ObtenerLista
+ 
         public async Task<List<Clientes>> ObtenerLista()
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
