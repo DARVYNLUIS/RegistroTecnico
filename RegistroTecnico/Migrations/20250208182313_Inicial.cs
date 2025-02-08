@@ -45,7 +45,7 @@ namespace RegistroTecnico.Migrations
                     TecnicoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombres = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SueldoHora = table.Column<float>(type: "real", nullable: false)
+                    SueldoHora = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {

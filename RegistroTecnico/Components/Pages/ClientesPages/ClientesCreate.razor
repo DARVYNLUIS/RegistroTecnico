@@ -23,8 +23,8 @@
             @* ClienteID *@
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="clienteID" class="form-label">ID del Cliente:</label>
-                    <InputNumber @bind-Value="cliente.ClienteId" class="form-control" />
+                    <label for="clienteId" class="form-label">ID del Cliente:</label>
+                    <InputNumber TValue="int" bind-value="cliente.ClienteId" class="form-control" disabled />
                 </div>
             </div>
 
@@ -32,27 +32,27 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="fechaIngreso" class="form-label">Fecha de Ingreso:</label>
-                    <InputDate @bind-Value="cliente.FechaIngreso" class="form-control" />
+                    <InputDate TValue="DateTime" bind-value="cliente.FechaIngreso" class="form-control" />
                 </div>
             </div>
 
             @* Nombre del Cliente *@
             <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre del Cliente:</label>
-                <InputText @bind-Value="cliente.Nombres" class="form-control" />
+                <label for="nombres" class="form-label">Nombre del Cliente:</label>
+                <InputText bind-value="cliente.Nombres" class="form-control" />
                 <ValidationMessage For="@(() => cliente.Nombres)" />
             </div>
 
             @* Dirección *@
             <div class="mb-3">
                 <label for="direccion" class="form-label">Dirección:</label>
-                <InputText @bind-Value="cliente.Direccion" class="form-control" />
+                <InputText bind-value="cliente.Direccion" class="form-control" />
             </div>
 
             @* RNC *@
             <div class="mb-3">
                 <label for="rnc" class="form-label">RNC:</label>
-                <InputText @bind-Value="cliente.RNC" class="form-control" />
+                <InputText bind-value="cliente.RNC" class="form-control" />
                 <ValidationMessage For="@(() => cliente.RNC)" />
             </div>
 
@@ -60,7 +60,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="limiteCredito" class="form-label">Límite de Crédito:</label>
-                    <InputNumber @bind-Value="cliente.LimiteCredito" class="form-control" />
+                    <InputNumber TValue="decimal" bind-value="cliente.LimiteCredito" class="form-control" min="0" />
                     <ValidationMessage For="@(() => cliente.LimiteCredito)" />
                 </div>
             </div>
@@ -68,7 +68,7 @@
             @* Técnico Encargado *@
             <div class="mb-3">
                 <label for="tecnicoId" class="form-label">Técnico Encargado:</label>
-                <InputSelect @bind-Value="cliente.TecnicoId" class="form-control">
+                <InputSelect TValue="int" bind-value="cliente.TecnicoId" class="form-control">
                     <option value="">Seleccione un técnico</option>
                     @foreach (var tecnico in tecnicos)
                     {

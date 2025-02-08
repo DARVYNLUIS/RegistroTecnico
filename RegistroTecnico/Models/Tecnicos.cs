@@ -11,6 +11,6 @@ namespace RegistroTecnico.Models
         public string Nombres { get; set; } = null!;
 
         [Required(ErrorMessage = "Este campo es obligatorio")]
-        public float SueldoHora { get; set; }
+        public decimal SueldoHora { get; set; }
     }
 }

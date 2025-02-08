@@ -6,32 +6,32 @@
 <EditForm Model="sistema" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
-    <div class="card shadow-lg border-0 rounded">
+    <div class="card shadow-lg border-0 rounded" style="background-color: #f8f9fa;">
         <div class="card-header bg-primary text-white text-center">
-            <h3> <i class="fas fa-clipboard-list"></i> Registro de Sistema</h3>
+            <h3> <i class="fas fa-cogs"></i> Registro de Sistema</h3>
         </div>
 
         <div class="card-body">
             @* SistemaId *@
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="sistemaID" class="form-label">ID del Sistema:</label>
-                    <InputNumber @bind-Value="sistema.SistemaId" class="form-control" aria-describedby="BotonBuscar" />
+                    <label for="SistemaId" class="form-label">ID del Sistema:</label>
+                    <InputNumber @bind-Value="sistema.SistemaId" TValue="int" class="form-control" disabled />
                 </div>
             </div>
 
-            @* Descripción del sistema *@
+            @* Descripción *@
             <div class="mb-3">
                 <label for="Descripcion" class="form-label">Descripción:</label>
                 <InputText @bind-Value="sistema.Descripcion" class="form-control" />
                 <ValidationMessage For="@(() => sistema.Descripcion)" />
             </div>
 
-            @* Complejidad del sistema *@
+            @* Complejidad *@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="Complejidad" class="form-label">Complejidad:</label>
-                    <InputNumber @bind-Value="sistema.Complejidad" class="form-control" />
+                    <InputNumber @bind-Value="sistema.Complejidad" TValue="int" class="form-control" min="1" max="10" />
                     <ValidationMessage For="@(() => sistema.Complejidad)" />
                 </div>
             </div>
@@ -50,17 +50,26 @@
 @code {
     public Sistemas sistema { get; set; } = new Sistemas();
     private bool Existe = false;
+    private string mensaje = string.Empty;
 
     public void Nuevo()
     {
         sistema = new Sistemas();
         Existe = false;
+        mensaje = string.Empty;
     }
 
     public async Task<bool> Validar()
     {
-        Existe = await sistemaService.Existe(sistema.SistemaId);
-        return !Existe;
+        mensaje = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(sistema.Descripcion) || sistema.Complejidad <= 0)
+        {
+            mensaje = "Todos los campos son obligatorios.";
+            return false;
+        }
+
+        return true;
     }
 
     public async Task Guardar()
@@ -73,7 +82,12 @@
         var guardo = await sistemaService.Guardar(sistema);
         if (guardo)
         {
+            mensaje = "Sistema creado exitosamente.";
             Nuevo();
+        }
+        else
+        {
+            mensaje = "Hubo un problema al guardar el sistema.";
         }
     }
 }

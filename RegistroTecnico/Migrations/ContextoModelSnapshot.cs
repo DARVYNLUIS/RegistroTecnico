@@ -107,8 +107,8 @@ namespace RegistroTecnico.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("SueldoHora")
-                        .HasColumnType("real");
+                    b.Property<decimal>("SueldoHora")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("TecnicoId");
 
