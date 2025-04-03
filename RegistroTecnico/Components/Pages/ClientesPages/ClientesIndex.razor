@@ -96,10 +96,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Cargar lista de clientes
+        
         ListaClientes = await clienteService.Listar(e => e.ClienteId > 0);
 
-        // Cargar nombres de los técnicos
+      
         var tecnicos = await tecnicoService.Listar(e => e.TecnicoId > 0);
         TecnicosDiccionario = tecnicos.ToDictionary(t => t.TecnicoId, t => t.Nombres);
     }
