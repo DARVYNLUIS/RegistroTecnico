@@ -15,7 +15,7 @@ namespace ClienteAPI
 
             // Conexión a SQL Server
             builder.Services.AddDbContext<Contexto>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConStr")));
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Servicios
             builder.Services.AddScoped<IClientesService, ClientesService>();
