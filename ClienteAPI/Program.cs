@@ -13,7 +13,7 @@ namespace ClienteAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Conexión a SQL Server
+            // Conexión a PostgreSQL
             builder.Services.AddDbContext<Contexto>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -25,7 +25,7 @@ namespace ClienteAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Cliente API",
                     Version = "v1"
@@ -34,19 +34,24 @@ namespace ClienteAPI
 
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
+            // Swagger habilitado siempre
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cliente API v1");
+                c.RoutePrefix = string.Empty; // Swagger en la raíz /
+            });
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection(); // Comentar en Render para evitar problemas con SSL
             app.UseAuthorization();
+
+            // Endpoint raíz de prueba
+            app.MapGet("/", () => "API ClienteAPI funcionando en Render!");
+
+            // Mapear controladores
             app.MapControllers();
 
             app.Run();
-
-
         }
     }
 }
