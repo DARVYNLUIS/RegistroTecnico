@@ -3,8 +3,8 @@ services:
     name: mi-api
     runtime: docker
     branch: ClienteAPI
-    rootDir: ./registrotecnico
-    dockerfilePath: ./registrotecnico/Dockerfile
-    region: oregon
+    rootDir: ./ClienteAPI
+    dockerfilePath: ./ClienteAPI/Dockerfile
     plan: free
+    region: oregon
     autoDeploy: true
