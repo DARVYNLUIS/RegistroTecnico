@@ -4,6 +4,7 @@ using Clientes.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 
 namespace ClienteAPI.Services.DI
@@ -12,15 +13,19 @@ namespace ClienteAPI.Services.DI
     {
         public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("SqlConStr");
+            
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
+            
             services.AddDbContextFactory<Contexto>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseNpgsql(connectionString)
+                       .EnableSensitiveDataLogging() 
+                       .LogTo(Console.WriteLine, LogLevel.Information));
 
+            
             services.AddScoped<IClientesService, ClientesService>();
 
             return services;
         }
-
     }
 }
