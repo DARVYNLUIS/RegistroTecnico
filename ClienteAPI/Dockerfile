@@ -22,5 +22,5 @@ COPY --from=build /app/publish .
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-# Cambia 'ClienteAPI.dll' por el nombre real de tu proyecto
-ENTRYP
+# Ejecutar la aplicación
+ENTRYPOINT ["dotnet", "ClienteAPI.dll"]

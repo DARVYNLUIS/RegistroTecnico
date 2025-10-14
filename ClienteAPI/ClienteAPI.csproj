@@ -24,10 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Clientes.Abstraction\Clientes.Abstraction.csproj" />
-    <ProjectReference Include="..\Clientes.Data\Clientes.Data.csproj" />
-    <ProjectReference Include="..\Clientes.Domain\Clientes.Domain.csproj" />
-    <ProjectReference Include="..\Clientes.Services\Clientes.Services.csproj" />
+	  <ProjectReference Include="..\Clientes.Abstraction\Clientes.Abstraction.csproj" />
+	  <ProjectReference Include="..\Clientes.Data\Clientes.Data.csproj" />
+	  <ProjectReference Include="..\Clientes.Domain\Clientes.Domain.csproj" />
+	  <ProjectReference Include="..\Clientes.Services\Clientes.Services.csproj" />
   </ItemGroup>
 
 </Project>
