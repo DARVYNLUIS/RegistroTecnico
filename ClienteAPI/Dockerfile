@@ -1,17 +1,26 @@
+# Etapa 1: build
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-WORKDIR /app
+WORKDIR /src
 
-COPY *.csproj ./
+# Copiar todo el proyecto
+COPY . .
+
+# Restaurar dependencias
 RUN dotnet restore
 
-COPY ./ ./
-RUN dotnet publish -c Release -o /out
+# Compilar y publicar en modo Release
+RUN dotnet publish -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet9.0
+# Etapa 2: runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
-COPY --from=build /out .
 
+# Copiar los archivos publicados desde la etapa anterior
+COPY --from=build /app/publish .
+
+# Configurar la URL de escucha
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "ClienteAPI.dll"]
+# Cambia 'ClienteAPI.dll' por el nombre real de tu proyecto
+ENTRYP
