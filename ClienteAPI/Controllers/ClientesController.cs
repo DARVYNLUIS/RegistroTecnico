@@ -1,17 +1,10 @@
-﻿using System;
+﻿using ClienteAPI.Abstractions;
+using Clientes.Data.Models;
+using Clientes.Domain.DTO;
+using Clientes.Services;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Clientes.Data.DAL;       
-using Clientes.Data.Models;   
-using Clientes.Abstraction;  
-using Clientes.Services;        
-using ClienteAPI.Abstractions;
-using ClienteAPI.Services;
 
 namespace ClienteAPI.Controllers;
 
@@ -34,7 +27,7 @@ public class ClientesController : ControllerBase
         return Ok(clientes);
     }
 
-    // GET: api/Clientes/5
+    // GET: api/Clientes/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<Cliente>> GetCliente(int id)
     {
@@ -45,24 +38,46 @@ public class ClientesController : ControllerBase
 
     // POST: api/Clientes
     [HttpPost]
-    public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
+    public async Task<ActionResult<Cliente>> PostCliente([FromBody] ClienteCreateDto dto)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var cliente = new Cliente
+        {
+            Nombres = dto.Nombres,
+            Direccion = dto.Direccion,
+            RNC = dto.RNC,
+            LimiteCredito = dto.LimiteCredito,
+            FechaIngreso = dto.FechaIngreso
+        };
+
         var guardado = await _clientesService.Guardar(cliente);
         if (!guardado) return BadRequest("No se pudo guardar el cliente.");
+
         return CreatedAtAction(nameof(GetCliente), new { id = cliente.ClienteId }, cliente);
     }
 
-    // PUT: api/Clientes/5
+    // PUT: api/Clientes/{id}
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+    public async Task<IActionResult> PutCliente(int id, [FromBody] ClienteCreateDto dto)
     {
-        if (id != cliente.ClienteId) return BadRequest();
-        var modificado = await _clientesService.Guardar(cliente);
-        if (!modificado) return NotFound();
+        var clienteExistente = await _clientesService.Buscar(id);
+        if (clienteExistente == null) return NotFound();
+
+        // Actualizar solo los campos permitidos
+        clienteExistente.Nombres = dto.Nombres;
+        clienteExistente.Direccion = dto.Direccion;
+        clienteExistente.RNC = dto.RNC;
+        clienteExistente.LimiteCredito = dto.LimiteCredito;
+        clienteExistente.FechaIngreso = dto.FechaIngreso;
+
+        var modificado = await _clientesService.Guardar(clienteExistente);
+        if (!modificado) return BadRequest("No se pudo modificar el cliente.");
+
         return NoContent();
     }
 
-    // DELETE: api/Clientes/5
+    // DELETE: api/Clientes/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCliente(int id)
     {
@@ -71,4 +86,3 @@ public class ClientesController : ControllerBase
         return NoContent();
     }
 }
-
