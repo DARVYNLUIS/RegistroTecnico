@@ -77,6 +77,30 @@ namespace RegistroTecnico.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Prestamos",
+                columns: table => new
+                {
+                    PrestamoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClienteId = table.Column<int>(type: "int", nullable: false),
+                    Monto = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CantidadCuotas = table.Column<int>(type: "int", nullable: false),
+                    Concepto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Prestamos", x => x.PrestamoId);
+                    table.ForeignKey(
+                        name: "FK_Prestamos_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "ClienteId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tickets",
                 columns: table => new
                 {
@@ -107,10 +131,43 @@ namespace RegistroTecnico.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PrestamosDetalles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PrestamoId = table.Column<int>(type: "int", nullable: false),
+                    CuotaNo = table.Column<int>(type: "int", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PrestamosDetalles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PrestamosDetalles_Prestamos_PrestamoId",
+                        column: x => x.PrestamoId,
+                        principalTable: "Prestamos",
+                        principalColumn: "PrestamoId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Clientes_TecnicoId",
                 table: "Clientes",
                 column: "TecnicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Prestamos_ClienteId",
+                table: "Prestamos",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PrestamosDetalles_PrestamoId",
+                table: "PrestamosDetalles",
+                column: "PrestamoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_ClienteId",
@@ -130,10 +187,16 @@ namespace RegistroTecnico.Migrations
                 name: "Ciudad");
 
             migrationBuilder.DropTable(
+                name: "PrestamosDetalles");
+
+            migrationBuilder.DropTable(
                 name: "Sistemas");
 
             migrationBuilder.DropTable(
                 name: "Tickets");
+
+            migrationBuilder.DropTable(
+                name: "Prestamos");
 
             migrationBuilder.DropTable(
                 name: "Clientes");

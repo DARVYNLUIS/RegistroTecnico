@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: Cliente-API
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: ConnectionStrings__DefaultConnection
+        fromDatabase:
+          name: Cliente-db
+          property: connectionString
+
+
+
+         

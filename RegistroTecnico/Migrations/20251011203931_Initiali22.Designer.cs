@@ -12,18 +12,82 @@ using RegistroTecnico.DAL;
 namespace RegistroTecnico.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20250208182313_Inicial")]
-    partial class Inicial
+    [Migration("20251011203931_Initiali22")]
+    partial class Initiali22
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Prestamos", b =>
+                {
+                    b.Property<int>("PrestamoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PrestamoId"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("CantidadCuotas")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Concepto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Monto")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("PrestamoId");
+
+                    b.HasIndex("ClienteId");
+
+                    b.ToTable("Prestamos");
+                });
+
+            modelBuilder.Entity("PrestamosDetalle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("CuotaNo")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PrestamoId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PrestamoId");
+
+                    b.ToTable("PrestamosDetalles");
+                });
 
             modelBuilder.Entity("RegistroTecnico.Models.Ciudad", b =>
                 {
@@ -159,6 +223,28 @@ namespace RegistroTecnico.Migrations
                     b.ToTable("Tickets");
                 });
 
+            modelBuilder.Entity("Prestamos", b =>
+                {
+                    b.HasOne("RegistroTecnico.Models.Clientes", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+                });
+
+            modelBuilder.Entity("PrestamosDetalle", b =>
+                {
+                    b.HasOne("Prestamos", "Prestamo")
+                        .WithMany("PrestamosDetalles")
+                        .HasForeignKey("PrestamoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Prestamo");
+                });
+
             modelBuilder.Entity("RegistroTecnico.Models.Clientes", b =>
                 {
                     b.HasOne("RegistroTecnico.Models.Tecnicos", "Tecnicos")
@@ -187,6 +273,11 @@ namespace RegistroTecnico.Migrations
                     b.Navigation("Clientes");
 
                     b.Navigation("Tecnicos");
+                });
+
+            modelBuilder.Entity("Prestamos", b =>
+                {
+                    b.Navigation("PrestamosDetalles");
                 });
 #pragma warning restore 612, 618
         }

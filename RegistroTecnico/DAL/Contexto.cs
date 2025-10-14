@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RegistroTecnico.Models;
 
-using RegistroTecnico.Models;
-using Microsoft.EntityFrameworkCore;
-
 namespace RegistroTecnico.DAL
 {
     public class Contexto : DbContext
@@ -15,17 +12,23 @@ namespace RegistroTecnico.DAL
         public DbSet<Ciudad> Ciudad { get; set; }
         public DbSet<Sistemas> Sistemas { get; set; }
         public DbSet<Tickets> Tickets { get; set; }
+        public DbSet<Prestamos> Prestamos { get; set; }  
+        public DbSet<PrestamosDetalle> PrestamosDetalles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-   
             modelBuilder.Entity<Tickets>()
-                .HasOne(t => t.Tecnicos)              
-                .WithMany()                          
-                .HasForeignKey(t => t.TecnicoId)      
-                .OnDelete(DeleteBehavior.Restrict);   
+                .HasOne(t => t.Tecnicos)
+                .WithMany()
+                .HasForeignKey(t => t.TecnicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PrestamosDetalle>()
+                .HasOne(pd => pd.Prestamo)
+                .WithMany(p => p.PrestamosDetalles)
+                .HasForeignKey(pd => pd.PrestamoId);
         }
     }
 }
