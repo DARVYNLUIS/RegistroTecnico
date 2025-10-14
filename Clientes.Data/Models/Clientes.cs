@@ -17,7 +17,7 @@ public class Cliente
     [Required(ErrorMessage = "La direccion es obligatoria")]
     public string? Direccion { get; set; }
 
-    [Required(ErrorMessage = "El RNC es obligatorio.")]
+    [Required(ErrorMessage = "El RNc es obligatorio.")]
     [RegularExpression(@"^\d{9}$", ErrorMessage = "El RNC debe contener 9 dígitos.")]
     public string? RNC { get; set; }
 
