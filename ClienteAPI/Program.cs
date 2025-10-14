@@ -1,6 +1,5 @@
 ﻿using ClienteAPI.Abstractions;
 using ClienteAPI.Services;
-using ClienteAPI.Services.DI;
 using Clientes.Data.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -13,14 +12,15 @@ namespace ClienteAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Conexión a PostgreSQL
+            
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<Contexto>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(connectionString));
 
-            // Servicios
+           
             builder.Services.AddScoped<IClientesService, ClientesService>();
 
-            // Controladores y Swagger
+           
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -34,7 +34,9 @@ namespace ClienteAPI
 
             var app = builder.Build();
 
-            // Swagger habilitado siempre
+            // -----------------------------
+            // MIDDLEWARE
+            // -----------------------------
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -42,7 +44,9 @@ namespace ClienteAPI
                 c.RoutePrefix = string.Empty; // Swagger en la raíz /
             });
 
-            // app.UseHttpsRedirection(); // Comentar en Render para evitar problemas con SSL
+            // Render maneja HTTPS externamente
+            // app.UseHttpsRedirection();
+
             app.UseAuthorization();
 
             // Endpoint raíz de prueba
